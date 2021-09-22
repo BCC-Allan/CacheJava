@@ -115,9 +115,10 @@ public class Cache implements Memorizavel {
 
 
     private int pegaEnderecoComecoBloco(int t, int r) {
-        int tamanhoR = contaBits(mascaraDoR()); // 4
-        int tamanhoW = contaBits(mascaraDoW()); // 2 elevado a n
+        int tamanhoR = contaBits(mascaraDoR()); // 7
+        int tamanhoW = contaBits(mascaraDoW()); // 6
+        int tComR = (t << tamanhoR) | r;
 
-        return (((t << tamanhoR) | r) << tamanhoW);
+        return tComR << tamanhoW;
     }
 }
