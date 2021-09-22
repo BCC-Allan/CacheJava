@@ -1,6 +1,13 @@
 package computadorCacheline;
-
+/**
+ * @author Allan Braun
+ * @author Valdemar Ceccon
+ * @author Matheus Bertho
+ * @author Gabriel Przy
+ * @author Pedro Contessoto
+ */
 public class Main {
+
     public static void main(String[] args) throws Exception {
         IO es = new IO(System.out);
         RAM ram = new RAM(24); // 16M
