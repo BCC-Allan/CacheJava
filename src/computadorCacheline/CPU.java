@@ -15,10 +15,16 @@ public class CPU {
     public void run(int endereco) throws Exception {
         PC = endereco;
         int valueA = memory.read(PC);
+        System.out.println("\nLendo valor");
         System.out.println("valueA = " + valueA);
+        System.out.println();
+
 
         int valueB = memory.read(PC + 1);
+
+        System.out.println("\nLendo valor");
         System.out.println("valueB = " + valueB);
+        System.out.println();
 
         int initialAddress = valueA;
         int finalAddress = valueB;

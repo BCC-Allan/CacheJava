@@ -7,14 +7,8 @@ public class Main {
         Cache cache = new Cache(8192, 64, ram);
         CPU cpu = new CPU(cache, es);
 
-        ex02(cpu, ram);
-    }
-
-    public static void ex01(CPU cpu, RAM ram) throws Exception {
-        ram.write(0, 120);
-        ram.write(1, 127);
-
-        cpu.run(0);
+//        ex02(cpu, ram);
+        ex03(cache);
     }
 
     public static void ex02(CPU cpu, RAM ram)  {
@@ -22,12 +16,30 @@ public class Main {
             final int start = 82000;
             ram.write(start, 1000);
             ram.write(start+1, 1023);
-            System.out.println("ram.read(start) = " + ram.read(start));
             cpu.run(start);
-            System.out.println("ram.read(start) = " + ram.read(start));
 
         } catch (Exception e) {
             System.err.println("Erro: " + e);
         }
+    }
+
+    public static void ex03(Cache cache) {
+        try {
+            System.out.println();
+            System.out.println("cache.write(16640, 1024)");
+            cache.write(16640, 1024); // miss
+            System.out.println();
+            System.out.println("cache.read(16640) = " + cache.read(16640));
+            System.out.println();
+            System.out.println("cache.read(49408) = " + cache.read(49408));
+            System.out.println();
+            System.out.println("cache.read(16640) = " + cache.read(16640));
+
+
+
+        } catch (Exception e) {
+            System.err.println("Erro: " + e);
+        }
+
     }
 }

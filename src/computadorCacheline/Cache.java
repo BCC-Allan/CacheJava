@@ -32,27 +32,27 @@ public class Cache implements Memorizavel {
 
     public void write(int addr, int data) throws Exception {
         int w = pegaPosicaoCacheLineW(addr);
-        CacheLine line = hitOrMiss(addr, w);
+        CacheLine line = hitOrMiss(addr);
         line.write(w, data);
     }
 
     public int read(int addr) throws Exception {
         int w = pegaPosicaoCacheLineW(addr);
-        CacheLine line = hitOrMiss(addr, w);
+        CacheLine line = hitOrMiss(addr);
         return line.read(w);
     }
 
-    private CacheLine hitOrMiss(int addr, int w) {
+    private CacheLine hitOrMiss(int addr) {
         int r = pegaIndiceCacheLineR(addr);
         int t = pegaTagDaCacheLineT(addr);
 
         CacheLine line = lines[r];
         if (line.estaNaCache(t)) {
             System.out.println("Cache Hit");
-            System.out.println(addr);
+            System.out.println("addr = " + addr);
         } else {
             System.out.println("Cache Miss");
-            System.out.println(addr);
+            System.out.println("addr = " + addr);
             tratarCacheMiss(line, t, r);
         }
 
@@ -63,7 +63,7 @@ public class Cache implements Memorizavel {
 
         try {
             if (line.foiModificada()) {
-                System.out.println("modificada");
+                System.out.println("Linha foi modificada");
                 int enderecoInicialRam = pegaEnderecoComecoBloco(line.getTag(), r);
                 line.copiarParaRam(enderecoInicialRam, memoriaRam);
             }
@@ -72,6 +72,7 @@ public class Cache implements Memorizavel {
             line.copiarDaRam(novoEnderecoInicialRam, memoriaRam);
             line.setTag(t);
             System.out.println("t = " + t);
+            System.out.println("r = " + r);
 
         } catch (Exception e) {
             System.out.println("erro em tratarCacheMiss");
@@ -86,7 +87,8 @@ public class Cache implements Memorizavel {
     private int pegaIndiceCacheLineR(int endereco) {
         // quantidade de bits que ja foram extraidos pelo w
         int qtdZerosFinal = contaBits(mascaraDoW());// 6
-        int mascara = mascaraDoR();
+
+        int mascara = mascaraDoR(); // 1111111
         int mascaraComPadding = mascara << qtdZerosFinal; // 1111111000000
         int r = endereco & mascaraComPadding;
         return r >> qtdZerosFinal; // tirando padding do r
@@ -94,8 +96,7 @@ public class Cache implements Memorizavel {
 
     private int pegaTagDaCacheLineT(int endereco) {
         // quantidade de bits que ja foram extraidos pelo w e pelo r
-        int qtdBitsZeroFinal = contaBits(mascaraDoW()) +
-                contaBits(mascaraDoR()); // 13 bits
+        int qtdBitsZeroFinal = contaBits(mascaraDoW()) + contaBits(mascaraDoR()); // 13 zeros
         int qtdBitsRemanecentesEsquerda = contaBits(endereco) - qtdBitsZeroFinal;
 
         int mascara = (1 << qtdBitsRemanecentesEsquerda) - 1; // 11111111111
@@ -117,7 +118,7 @@ public class Cache implements Memorizavel {
     private int pegaEnderecoComecoBloco(int t, int r) {
         int tamanhoR = contaBits(mascaraDoR()); // 7
         int tamanhoW = contaBits(mascaraDoW()); // 6
-        int tComR = (t << tamanhoR) | r;
+        int tComR = (t << tamanhoR) | r; // conhecido tb como s
 
         return tComR << tamanhoW;
     }

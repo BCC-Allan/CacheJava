@@ -23,7 +23,11 @@ public class CacheLine extends Memory {
     }
 
     public boolean estaNaCache(int t) {
-        if (vazia) return false;
+        if (vazia) {
+            System.out.println("Cache vazia");
+            return false;
+        }
+        System.out.printf("Comparando tag interna %d com tag %d%n", this.tag, t);
         return t == this.tag;
     }
 
